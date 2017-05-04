@@ -3,7 +3,7 @@ const Members = require('members');
 const SlackClient = require('slack-client');
 const Promise = require('bluebird');
 
-module.exports = class TwitchPoller {
+module.exports = class TwitchBot {
   let currentlyStreaming = [];
 
   constructor(membersConnectionString, slackWebHook, twitchClientId) {
