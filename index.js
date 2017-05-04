@@ -4,9 +4,8 @@ const SlackClient = require('slack-client');
 const Promise = require('bluebird');
 
 module.exports = class TwitchBot {
-  let currentlyStreaming = [];
-
   constructor(membersConnectionString, slackWebHook, twitchClientId) {
+    this.currentlyStreaming = [];
     this.members = new Members(membersConnectionString);
     this.slackClient = new SlackClient(slackWebHook);
     this.twitchClientId = twitchClientId;
@@ -14,7 +13,7 @@ module.exports = class TwitchBot {
 
   poll() {
     let twitchToMember = {};
-    members
+    return this.members
       .getMembers()
       .then(result => {
         const members = result
@@ -47,10 +46,10 @@ module.exports = class TwitchBot {
 
         const newStreamers = [];
 
-        currentlyStreaming = result.streams.map(stream => {
+        this.currentlyStreaming = result.streams.map(stream => {
           const id = stream.channel._id;
 
-          if (!currentlyStreaming.includes(id)) {
+          if (!this.currentlyStreaming.includes(id)) {
             newStreamers.push(stream);
           }
 
@@ -60,7 +59,7 @@ module.exports = class TwitchBot {
         return Promise.all(newStreamers.map(stream => {
           const member = twitchToMember[stream.channel._id];
 
-          return slackClient.sendMessage(
+          return this.slackClient.sendMessage(
             `@${member.RowKey} started streaming ${stream.game}!`,
             [{
               title: stream.channel.url,
