@@ -65,7 +65,7 @@ module.exports = class TwitchBot {
           const member = twitchToMember[stream.channel._id];
 
           return this.slackClient.sendMessage(
-            `@${member.RowKey} started streaming "${stream.game}"!`,
+            `<@${member.SlackId}> started streaming ${stream.game}!`,
             [{
               title: stream.channel.url,
               image_url: stream.preview.medium,
