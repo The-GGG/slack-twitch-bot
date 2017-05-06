@@ -44,7 +44,7 @@ module.exports = class TwitchBot {
       })
       .then(result => {
         if (!result || !result.streams || result.streams.length === 0) {
-          console.log(`noone is streaming ${result}`);
+          console.log(`noone is streaming: ${result}`);
           return Promise.resolve();
         }
 
