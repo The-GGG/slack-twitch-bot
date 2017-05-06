@@ -13,9 +13,11 @@ module.exports = class TwitchBot {
 
   poll() {
     let twitchToMember = {};
+    console.log("getting members");
     return this.members
       .getMembers()
       .then(result => {
+        console.log(`got ${result.count} members`);
         const members = result
           .filter(member => member.TwitchId && member.TwitchId.length > 0);
 
@@ -29,6 +31,7 @@ module.exports = class TwitchBot {
           .join(',');
       })
       .then(result => {
+        console.log(`getting status for users with twitch IDs ${result}`);
         return rp({
             method: 'GET',
             uri: `https://api.twitch.tv/kraken/streams?channel=${result}`,
@@ -41,9 +44,11 @@ module.exports = class TwitchBot {
       })
       .then(result => {
         if (!result || !result.streams || result.streams.length === 0) {
+          console.log(`noone is streaming ${result}`);
           return Promise.resolve();
         }
 
+        console.log(`${result.streams.length} people are streaming`);
         const newStreamers = [];
 
         this.currentlyStreaming = result.streams.map(stream => {
@@ -60,7 +65,7 @@ module.exports = class TwitchBot {
           const member = twitchToMember[stream.channel._id];
 
           return this.slackClient.sendMessage(
-            `@${member.RowKey} started streaming ${stream.game}!`,
+            `@${member.RowKey} started streaming "${stream.game}"!`,
             [{
               title: stream.channel.url,
               image_url: stream.preview.medium,
