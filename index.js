@@ -83,6 +83,7 @@ module.exports = class TwitchBot {
       const twitchStream = twitchResponse.streams.find(s => s.channel._id == member.TwitchId);
 
       if (twitchStream) {
+        member.stream = twitchStream;
         if (member.isStreaming) {
           return this.sendSlackUpdate(
             `<@${member.SlackId}> is streaming ${twitchStream.game}!   :twitch_live: LIVE`,
@@ -90,7 +91,6 @@ module.exports = class TwitchBot {
             twitchStream);
         } else {
           member.isStreaming = true;
-          member.stream = twitchStream;
           return this.sendSlackMessage(
               `<@${member.SlackId}> is streaming ${twitchStream.game}!   :twitch_live: LIVE`,
               twitchStream)
