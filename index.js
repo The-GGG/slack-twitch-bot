@@ -79,7 +79,7 @@ module.exports = class TwitchBot {
 
     console.log(`${twitchResponse.streams.length} people are streaming`);
 
-    return this.members.map(member => {
+    yield this.members.map(member => {
       const twitchStream = twitchResponse.streams.find(s => s.channel._id == member.TwitchId);
 
       if (twitchStream) {
